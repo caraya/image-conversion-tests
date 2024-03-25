@@ -1,0 +1,25 @@
+#! /usr/bin/env bash
+
+# formats we want to convert to
+formats=(jxl webp avif png jpg)
+
+# source file
+source=$1
+
+intermediate="$(b=${source##*/}; echo ${b%.*})"
+
+echo "Source Image $source"
+
+echo "Resizing image"
+convert $source -resize 800x800 $intermediate-resized.tif
+
+echo "Starting conversion of $source"
+
+for format in ${formats[@]}
+do
+  # code to run the conversion goes here
+  echo "Converting to $format"
+  convert $intermediate-resized.tif $intermediate.$format 
+  s=$( stat -f %z $intermediate.$format)
+  echo "$format == $s"
+done
